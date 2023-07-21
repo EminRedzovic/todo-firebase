@@ -6,7 +6,7 @@ import {
   logout,
   updateTodoItemData,
 } from "../../firebase.js";
-import { Button, Typography, Box } from "@mui/material";
+import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { auth } from "../../firebase.js";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +51,6 @@ const App = (props) => {
   const addNewTask = () => {
     const itemData = {
       tittle: taskName,
-      description: "",
       date: new Date(),
       done: false,
     };

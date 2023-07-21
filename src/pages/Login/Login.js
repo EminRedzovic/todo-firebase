@@ -4,7 +4,7 @@ import React from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const loginSchema = yup.object({
   email: yup
