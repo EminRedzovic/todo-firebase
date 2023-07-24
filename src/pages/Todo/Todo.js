@@ -30,8 +30,8 @@ const App = (props) => {
   const consoleLog = async () => {
     try {
       const user = await checkUserLoggedIn();
-      console.log(user?.uid);
-      if (user?.uid !== undefined) {
+      setLoggedIn(false);
+      if (user?.uid) {
         setLoggedIn(true);
       }
     } catch (error) {
