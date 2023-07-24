@@ -27,10 +27,11 @@ const App = (props) => {
     });
   };
 
-  const consoleLog = async () => {
+  const Login = async () => {
     try {
       const user = await checkUserLoggedIn();
-      setLoggedIn(false);
+      // setLoggedIn(false);
+      console.log("aa123");
       if (user?.uid) {
         setLoggedIn(true);
       }
@@ -39,18 +40,22 @@ const App = (props) => {
     }
   };
 
-  consoleLog();
   const getAllItems = () => {
+    console.log("aa");
     getTodoList().then((data) => {
       setToDoList(data);
     });
   };
+
   useEffect(() => {
     getAllItems();
+    Login();
   }, []);
+
   const addNewTask = () => {
     const itemData = {
       tittle: taskName,
+      description: "",
       date: new Date(),
       done: false,
     };
@@ -58,6 +63,7 @@ const App = (props) => {
       getAllItems();
     });
   };
+
   const clearAllItems = () => {
     deleteAllToDoItems().then(() => {
       getAllItems();
@@ -102,8 +108,8 @@ const App = (props) => {
             placeholder="Add your new todo"
             value={taskName}
             onChange={(event) => {
-              const taskNameValue = event.target.value;
-              setTaskName(taskNameValue);
+              // const taskNameValue = event.target.value;
+              setTaskName(event.target.value);
             }}
             onKeyDown={(event) => {
               if (event.key === "Enter") {
