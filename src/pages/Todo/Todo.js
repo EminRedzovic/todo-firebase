@@ -9,47 +9,42 @@ import {
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { auth } from "../../firebase.js";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import PlusImg from "./slika/plus.png";
 
 const App = (props) => {
   const [taskName, setTaskName] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const [toDoList, setToDoList] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
-  const checkUserLoggedIn = () => {
-    return new Promise((resolve, reject) => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        unsubscribe();
-        resolve(user);
-      }, reject);
-    });
-  };
+  const authState = useSelector((state) => state.auth);
 
-  const Login = async () => {
-    try {
-      const user = await checkUserLoggedIn();
-      // setLoggedIn(false);
-      console.log("aa123");
-      if (user?.uid) {
-        setLoggedIn(true);
-      }
-    } catch (error) {
-      console.error("Došlo je do greške pri proveri autentikacije:", error);
+  console.log(authState);
+  const checkAuth = () => {
+    if (authState) {
+      setLoggedIn(true);
     }
   };
-
   const getAllItems = () => {
-    console.log("aa");
     getTodoList().then((data) => {
       setToDoList(data);
     });
   };
 
+  const LoadingData = () => {
+    setTimeout(() => {
+      setLoading(false);
+      getAllItems();
+    }, 500);
+  };
+
   useEffect(() => {
-    getAllItems();
-    Login();
+    checkAuth();
+    LoadingData();
   }, []);
 
   const addNewTask = () => {
@@ -77,19 +72,26 @@ const App = (props) => {
       getAllItems();
     });
   };
+  if (loading) {
+    return <div>Loading</div>;
+  }
   return (
     <div className="container">
       {loggedIn ? (
         <Button
+          className="butto"
           variant="contained"
           onClick={() => {
             logout();
+            setLoggedIn(false);
+            getAllItems();
           }}
         >
           Logout
         </Button>
       ) : (
         <Button
+          className="butto"
           variant="contained"
           onClick={() => {
             navigate("/");

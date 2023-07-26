@@ -8,9 +8,18 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  query,
+  where,
 } from "firebase/firestore/lite";
 
-import { getAuth, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { store } from "./store/store";
+import { authSlice } from "./store/authSlice";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -26,15 +35,35 @@ const firebaseApp = initializeApp(firebaseConfig);
 export const db = getFirestore(firebaseApp);
 export const auth = getAuth(firebaseApp);
 
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch(authSlice.actions.setData(user.uid));
+  } else {
+    store.dispatch(authSlice.actions.logout());
+  }
+});
+
 export const getTodoList = async () => {
-  const todoListCollection = collection(db, "todo-list");
-  const quoteResults = await getDocs(todoListCollection);
-  const quoteList = quoteResults.docs.map((doc) => {
+  // const todoListCollection = collection(db, "todo-list");
+  // const quoteResults = await getDocs(todoListCollection);
+  // const quoteList = quoteResults.docs.map((doc) => {
+  //   const data = doc.data();
+  //   const id = doc.id;
+  //   return { ...data, id: id };
+  // });
+  // return quoteList;
+  const todolistCollection = collection(db, "todo-list");
+  const dbquery = query(
+    todolistCollection,
+    where("userId", "==", auth.currentUser?.uid || "")
+  );
+  const todolistResults = await getDocs(dbquery);
+  const todolistList = todolistResults.docs.map((doc) => {
     const data = doc.data();
     const id = doc.id;
     return { ...data, id: id };
   });
-  return quoteList;
+  return todolistList;
 };
 export const getTodoItemById = async (id) => {
   const docRef = doc(db, "todo-list", id);
@@ -53,13 +82,27 @@ export const deleteTodoItem = async (id) => {
   return await deleteDoc(docRef);
 };
 export const addTodoItem = async (data) => {
-  const result = await addDoc(collection(db, "todo-list"), data);
+  const result = await addDoc(collection(db, "todo-list"), {
+    ...data,
+    userId: auth.currentUser.uid,
+  });
   return result;
 };
 
+export const register = async (email, password) => {
+  return createUserWithEmailAndPassword(auth, email, password);
+};
 export const logout = async () => {
   const result = await signOut(auth);
   return result;
+};
+export const login = async (email, password) => {
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  return userCredential.user;
 };
 
 export const deleteAllToDoItems = async () => {

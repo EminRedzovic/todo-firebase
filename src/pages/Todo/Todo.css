@@ -16,6 +16,9 @@ body {
   justify-content: center;
   align-items: center;
 }
+body {
+  position: relative;
+}
 
 .todo__box {
   box-shadow: 0px 0px 5px 0px #6f6f71;
@@ -88,4 +91,9 @@ body {
 .form {
   display: flex;
   align-items: stretch;
+}
+.butto {
+  position: absolute !important;
+  top: 20px;
+  right: 20px;
 }

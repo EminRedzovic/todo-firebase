@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, login } from "../../firebase.js";
+import { auth, register } from "../../firebase.js";
 import React, { useEffect } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -38,7 +38,6 @@ const Login = () => {
   const consoleLog = async () => {
     try {
       const user = await checkUserLoggedIn();
-
       if (user?.uid !== undefined) {
         navigate("/todo");
       }
@@ -51,17 +50,12 @@ const Login = () => {
     consoleLog();
   }, []);
   const navigate = useNavigate();
-  // const submitForm = async (email, password) => {
-  //   await createUserWithEmailAndPassword(auth, email, password).then(() => {
-  //     navigate("/todo");
-  //   });
-  // };
   const submitForm = async (email, password) => {
     try {
-      await login(email, password);
+      await register(email, password);
       navigate("/todo");
     } catch (error) {
-      alert(error);
+      alert("error");
     }
   };
 
@@ -82,13 +76,13 @@ const Login = () => {
           handleBlur,
           handleSubmit,
         }) => (
-          <Box>
+          <div>
             <center>
               <Typography variant="h4" color={"primary"} gutterBottom>
-                Login Page
+                Register Page
               </Typography>
             </center>
-            <Box my={2} center>
+            <Box my={2}>
               <center>
                 <TextField
                   type="email"
@@ -123,22 +117,24 @@ const Login = () => {
               </Typography>
             </Box>
             <center>
-              <Typography variant="body1">
+              <Typography>
                 Or{" "}
                 <span
                   onClick={() => {
-                    navigate("/register");
+                    navigate("/");
                   }}
                 >
-                  Register
+                  Login
                 </span>
               </Typography>
-
               <Button variant="contained" onClick={handleSubmit}>
                 Submit
               </Button>
             </center>
-          </Box>
+            {/* <button onClick={handleSubmit} type="button">
+            Submit
+          </button> */}
+          </div>
         )}
       </Formik>
     </div>
