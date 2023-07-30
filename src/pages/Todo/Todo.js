@@ -5,9 +5,11 @@ import {
   getTodoList,
   logout,
   updateTodoItemData,
+  deleteTodo,
 } from "../../firebase.js";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { auth } from "../../firebase.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,7 @@ const App = (props) => {
   const checkAuth = (id) => {
     if (id) {
       setLoggedIn(true);
+      console.log(id);
     }
   };
 
@@ -43,12 +46,20 @@ const App = (props) => {
   // getTodoList()
   // },[])
   // Kao useeffect posle mozemo test da stavljamo u dep array u useeffect
+  const deleteHandler = async (id) => {
+    try {
+      await deleteTodo(id);
+      getAllItems();
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   const LoadingData = (id) => {
     setTimeout(() => {
       setLoading(false);
-
       getAllItems();
-    }, 500);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -143,22 +154,44 @@ const App = (props) => {
           <div id="list" className="d-grid gap-2 col-6 button">
             {toDoList.map((item, index) => {
               return (
-                <button
-                  key={index}
-                  className="list-items"
-                  onClick={() => {
-                    seItemIsDone(item.id, item.done);
-                    console.log(item.done);
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: " 0px",
+                    width: "100%",
                   }}
                 >
-                  <p
-                    style={{
-                      textDecoration: item.done ? "line-through" : "none",
+                  <button
+                    key={index}
+                    className="list-items"
+                    onClick={() => {
+                      seItemIsDone(item.id, item.done);
+                      console.log(item.done);
                     }}
                   >
-                    {item.tittle}
-                  </p>
-                </button>
+                    <p
+                      style={{
+                        textDecoration: item.done ? "line-through" : "none",
+                      }}
+                    >
+                      {item.tittle}
+                    </p>
+                  </button>
+                  <Box
+                    onClick={() => deleteHandler(item.id)}
+                    sx={{
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <DeleteIcon color="error" />
+                  </Box>
+                </Box>
               );
             })}
           </div>

@@ -73,6 +73,11 @@ export const getTodoItemById = async (id) => {
   return { ...data, id: id };
 };
 
+export const deleteTodo = async (id) => {
+  const docRef = doc(db, "todo-list", id);
+  return await deleteDoc(docRef);
+};
+
 export const updateTodoItemData = async (id, data) => {
   const docRef = doc(db, "todo-list", id);
   return await updateDoc(docRef, data);
