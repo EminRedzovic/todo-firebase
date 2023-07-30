@@ -46,10 +46,9 @@ const App = (props) => {
   const LoadingData = (id) => {
     setTimeout(() => {
       setLoading(false);
-      console.log(id, "aisdsds");
 
       getAllItems();
-    }, 2000);
+    }, 500);
   };
 
   useEffect(() => {
