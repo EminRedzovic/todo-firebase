@@ -53,7 +53,7 @@ const Login = () => {
   const submitForm = async (email, password) => {
     try {
       await register(email, password);
-      navigate("/todo");
+      navigate("/");
     } catch (error) {
       alert("error");
     }
@@ -121,7 +121,7 @@ const Login = () => {
                 Or{" "}
                 <span
                   onClick={() => {
-                    navigate("/");
+                    navigate("/login");
                   }}
                 >
                   Login

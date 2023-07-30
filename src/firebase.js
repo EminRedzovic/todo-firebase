@@ -37,7 +37,7 @@ export const auth = getAuth(firebaseApp);
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch(authSlice.actions.setData(user.uid));
+    store.dispatch(authSlice.actions.setData({ id: user.uid }));
   } else {
     store.dispatch(authSlice.actions.logout());
   }
@@ -94,6 +94,7 @@ export const register = async (email, password) => {
 };
 export const logout = async () => {
   const result = await signOut(auth);
+  store.dispatch(authSlice.actions.logout());
   return result;
 };
 export const login = async (email, password) => {
