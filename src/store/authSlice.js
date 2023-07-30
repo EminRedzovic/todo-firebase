@@ -13,8 +13,8 @@ export const authSlice = createSlice({
       state = data;
       return state;
     },
-    // logout(state, actions) {
-    //   return initialState;
-    // },
+    logout(state, actions) {
+      return initialState;
+    },
   },
 });

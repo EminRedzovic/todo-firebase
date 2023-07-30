@@ -59,7 +59,7 @@ const Login = () => {
   const submitForm = async (email, password) => {
     try {
       await login(email, password);
-      navigate("/todo");
+      navigate("/");
     } catch (error) {
       alert(error);
     }
